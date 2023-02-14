@@ -1,0 +1,5 @@
+node_modules
+ci
+.next
+.linaria-cache
+next.config.js

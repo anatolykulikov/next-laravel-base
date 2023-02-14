@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  nginx: 
+    container_name: nginx
+    build: ./nginx
+    depends_on:
+      - nextjs
+      - laravel
+      - php
+    volumes:
+      - ./laravel/:/var/www/
+    ports:
+      - 9095:80
+    networks:
+      - app-network
+
+  nextjs: 
+    container_name: nextjs
+    build: ./nextjs
+    expose:
+      - 3000
+    networks:
+      - app-network
+
+  laravel:
+    container_name: laravel
+    image: nginx:latest
+    ports:
+      - 9096:4000
+    expose:
+      - 9096
+    volumes:
+      - ./nginx/backend.nginx:/etc/nginx/conf.d/default.conf
+      - ./laravel/:/var/www/
+    depends_on:
+      - php
+    links:
+     - php
+    networks:
+      - app-network
+
+  php:
+    container_name: php
+    image: php:8.1-fpm-alpine
+    volumes:
+      - ./laravel/:/var/www/
+    networks:
+      - app-network
+
+  
+
+networks:
+  app-network:
+    driver: bridge
