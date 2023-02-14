@@ -13,7 +13,7 @@ services:
     ports:
       - 9095:80
     networks:
-      - app-network
+      - backend
 
   nextjs: 
     container_name: nextjs
@@ -21,7 +21,7 @@ services:
     expose:
       - 3000
     networks:
-      - app-network
+      - backend
 
   laravel:
     container_name: laravel
@@ -38,18 +38,35 @@ services:
     links:
      - php
     networks:
-      - app-network
+      - backend
 
   php:
     container_name: php
-    image: php:8.1-fpm-alpine
+    build:
+      context: ./laravel
     volumes:
       - ./laravel/:/var/www/
     networks:
-      - app-network
+      - backend
 
-  
+  mysql:
+    container_name: mysql
+    image: mysql:8
+    ports:
+      - 9097:3306
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: JaZIJLpYRk
+      MYSQL_USER: fGOYopjPAo
+      MYSQL_ROOT_PASSWORD: QWFcaIMKpb
+      MYSQL_PASSWORD: QWFcaIMKpb
+    networks:
+      - backend
 
 networks:
-  app-network:
+  backend:
     driver: bridge
+
+volumes:
+  data:
