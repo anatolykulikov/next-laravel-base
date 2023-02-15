@@ -2,12 +2,13 @@ version: '3.9'
 
 services:
   nginx: 
-    container_name: nginx
+    container_name: apl_nginx
     build: ./nginx
     depends_on:
       - nextjs
       - laravel
       - php
+      - mysql
     volumes:
       - ./laravel/:/var/www/
     ports:
@@ -15,8 +16,8 @@ services:
     networks:
       - backend
 
-  nextjs: 
-    container_name: nextjs
+  nextjs:
+    container_name: apl_nextjs
     build: ./nextjs
     expose:
       - 3000
@@ -24,7 +25,7 @@ services:
       - backend
 
   laravel:
-    container_name: laravel
+    container_name: apl_laravel
     image: nginx:latest
     ports:
       - 9096:4000
@@ -35,13 +36,15 @@ services:
       - ./laravel/:/var/www/
     depends_on:
       - php
+      - mysql
     links:
      - php
+     - mysql
     networks:
       - backend
 
   php:
-    container_name: php
+    container_name: apl_php
     build:
       context: ./laravel
     volumes:
@@ -50,17 +53,19 @@ services:
       - backend
 
   mysql:
-    container_name: mysql
+    container_name: apl_mysql
     image: mysql:8
     ports:
       - 9097:3306
+    expose:
+      - 9097
     volumes:
       - data:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: JaZIJLpYRk
-      MYSQL_USER: fGOYopjPAo
-      MYSQL_ROOT_PASSWORD: QWFcaIMKpb
-      MYSQL_PASSWORD: QWFcaIMKpb
+      MYSQL_DATABASE: GYgkjVGk
+      MYSQL_USER: txlgnZnZ
+      MYSQL_ROOT_PASSWORD: dIRYAKWe
+      MYSQL_PASSWORD: dIRYAKWe
     networks:
       - backend
 
